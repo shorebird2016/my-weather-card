@@ -1,0 +1,5 @@
+Future ideas for this project:
+
+==> Locations don't often work on smartphones
+
+==> Use media query to look better on smartphones
