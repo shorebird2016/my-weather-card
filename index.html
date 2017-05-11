@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app='weatherApp'>
+<head>
+    <meta charset="UTF-8">
+    <title>My Weather Card</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css"><!-- reset -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body ng-controller="weatherCtrl as CTRL" ng-style="CTRL.appBkgnd">
+    <div class="container" style="border: solid 1px gray; border-radius: 10px;
+            background-color: white; margin-top: 50px; opacity: 0.75;">
+        <h2 style="margin-bottom: 30px;"> {{ CTRL.addr }} <!-- google places returns full address -->
+        <img ng-src="{{CTRL.countryFlag}}" width="50px;"><!-- flag  -->
+        <span style="font-size: small">( {{ CTRL.lat}},<!-- geolocation: longitude and lattitude -->
+            {{ CTRL.lon }} )</span> </h2>
+
+        <!-- two panes below - left for current weather, right for map/photos -->
+        <div class="row">
+            <div class="col-sm-5"> <!--- temperature, range--->
+                <div class="label label-success" style="font-size: large; margin-right: 20px;">
+                    {{ CTRL.curTemp | number:2 }} &#176;
+                    {{ CTRL.temperatureUnit }}
+                </div>
+                <span>&nbsp;<i class="fa fa-eye fa-2x" ng-click="CTRL.toggleCF()" style="margin-right: 15px;"
+                           data-toggle="tooltip" data-placement="top"
+                           title="toggle betweem Celcius and Fahrenheit"></i>
+                    (feels like {{ CTRL.weatherDetail.feelslike_f }})
+                </span>
+                <!--- weather conditions, temp range --->
+                <blockquote style="margin-top: 10px;">
+                    <!--Condition:-->
+                    <!-- use loop to display all conditions -->
+                    <img ng-src="{{CTRL.weatherDetail.condition.icon}}">
+                    <mark style="font-size: large"> {{ CTRL.weatherDetail.condition.text }}</mark>
+
+                    <!-- wind, humidity, barometric pressure, clouds, visibility -->
+                    <p>Humidity: <mark style="font-size: large;">{{ CTRL.weatherDetail.humidity }} %</mark></p>
+                    <p>Pressure: <mark style="font-size: large;">{{ CTRL.weatherDetail.pressure_mb }} millibar</mark></p>
+                    <p>Wind: <mark style="font-size: large;">{{ CTRL.weatherDetail.wind_mph }} miles/hour
+                        , {{ CTRL.weatherDetail.wind_degree }} degree
+                        , {{ CTRL.weatherDetail.wind_dir }} </mark>
+                    </p>
+                    <p>Clouds: <mark style="font-size: large;">{{ CTRL.weatherDetail.cloud }} %</mark></p>
+                    <p>Visibility: <mark style="font-size: large;">{{ CTRL.weatherDetail.vis_miles }} miles</mark></p>
+                </blockquote>
+                <!-- city search widget -->
+                <nav class="navbar" style="background-color: inherit;">
+                    <form class="navbar-form">
+                        <div class="form-group navbar-right">
+                            <input type="text" class="form-control" placeholder="enter location here..."
+                                   ng-model="CTRL.locEntry" id="AUTO-COMPLETE" style="width: 300px;">
+                            <button type="submit" class="btn btn-primary" ng-click="CTRL.requestWeatherForEntry()">
+                                <i class="fa fa-search"></i></button> <!-- use icon instead of search text -->
+                        </div>
+                    </form>
+                </nav>
+            </div>
+            <div class="col-sm-6" style="border: 1px gray solid; border-radius: 5px;">
+                <ng-map zoom="11" center="{{ CTRL.mapCenter }}"></ng-map> <!-- first lattitude then logitude -->
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<script src="https://use.fontawesome.com/82ff9964a3.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js'></script>
+<script src="ng-map.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBukE_DADQPCY0BaFIzak-ADhXY_Irq3FM&libraries=places"></script>
+<script src="main.js"></script>
+</body>
+</html>
